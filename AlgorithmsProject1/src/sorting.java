@@ -1,217 +1,129 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.Random;
-import java.util.Arrays;
+import java.util.Scanner;
 
-public class sorting {
-    
-    private static int[] arr;
-    private static int[] arrCopy;
-    private static BufferedReader read;
-    private static Random randomGenerator;
-    
-    private static int size;
-    private static int random;
-    
-    private static int n;
-
-    private static void printArray() {
-    	System.out.print("[" + arr[0]);
-        for(int i=1; i<size; i++) {
-            System.out.print(", " + arr[i]);
-        }
-        System.out.println("]");
-    }
-    
-    public static void buildheap(){
-        n=arr.length-1;
-        for(int i=n/2;i>=0;i--){
-            heapify(i);
-        }
-    }
-    
-    public static void heapify(int i){ 
-        int largest;
-        int left=2*i;
-        int right=2*i+1;
-        if(left <= n && arr[left] > arr[i]){
-            largest=left;
-        }
-        else{
-            largest=i;
-        }
-        
-        if(right <= n && arr[right] > arr[largest]){
-            largest=right;
-        }
-        if(largest!=i){
-            exchange(i,largest);
-            heapify(largest);
-        }
-    }
-    
-    public static void exchange(int i, int j){
-        int t=arr[i];
-        arr[i]=arr[j];
-        arr[j]=t; 
-   }
-    
-    public static void heapsort(){
-        buildheap();    
-        for(int i=n;i>0;i--){
-            exchange(0, i);
-            n=n-1;
-            heapify(0);
-        }
-    }
-    
-    private static void mergesort(int low, int high) {
-        // Check if low is smaller then high, if not then the array is sorted
-        if (low < high) {
-          // Get the index of the element which is in the middle
-          int middle = low + (high - low) / 2;
-          // Sort the left side of the array
-          mergesort(low, middle);
-          // Sort the right side of the array
-          mergesort(middle + 1, high);
-          // Combine them both
-          merge(low, middle, high);
-        }
-      }
-
-      private static void merge(int low, int middle, int high) {
-
-        // Copy both parts into the arrCopy array
-        for (int i = low; i <= high; i++) {
-          arrCopy[i] = arr[i];
-        }
-
-        int i = low;
-        int j = middle + 1;
-        int k = low;
-        // Copy the smallest values from either the left or the right side back
-        // to the original array
-        while (i <= middle && j <= high) {
-          if (arrCopy[i] <= arrCopy[j]) {
-            arr[k] = arrCopy[i];
-            i++;
-          } else {
-            arr[k] = arrCopy[j];
-            j++;
-          }
-          k++;
-        }
-        // Copy the rest of the left side of the array into the target array
-        while (i <= middle) {
-          arr[k] = arrCopy[i];
-          k++;
-          i++;
-        }
-
-      }
-      
-      private static void quicksort(int low, int high) {
-    	    int i = low, j = high;
-    	    // Get the pivot element from the middle of the list
-    	    int pivot = arr[(high+low)/2];
-
-    	    // Divide into two lists
-    	    while (i <= j) {
-    	      // If the current value from the left list is smaller then the pivot
-    	      // element then get the next element from the left list
-    	      while (arr[i] < pivot) {
-    	        i++;
-    	      }
-    	      // If the current value from the right list is larger then the pivot
-    	      // element then get the next element from the right list
-    	      while (arr[j] > pivot) {
-    	        j--;
-    	      }
-
-    	      // If we have found a values in the left list which is larger then
-    	      // the pivot element and if we have found a value in the right list
-    	      // which is smaller then the pivot element then we exchange the
-    	      // values.
-    	      // As we are done we can increase i and j
-    	      if (i < j) {
-    	        exchange(i, j);
-    	        i++;
-    	        j--;
-    	      } else if (i == j) { i++; j--; }
-    	    }
-
-    	    // Recursion
-    	    if (low < j)
-    	      quicksort(low, j);
-    	    if (i < high)
-    	      quicksort(i, high);
-    	  }
-
-    public static void main(String[] args) {
-        
-        read = new BufferedReader(new InputStreamReader(System.in));
-        
-        randomGenerator = new Random();
-        
-        try
-        {
-            System.out.print("Please enter array size : ");
-            size = Integer.parseInt(read.readLine());
-            
-            System.out.print("Please enter the random range : ");
-            random = Integer.parseInt(read.readLine());
-            
-            // create array
-            arr = new int[size];
-            arrCopy = new int[size];
-            
-            
-            // fill array
-            for(int i=0; i<size; i++) {
-                arr[i] = arrCopy[i] = randomGenerator.nextInt(random);
-            }
-            if (size < 101) { 
-            	System.out.println("Initial array:");
-            	printArray();
-            }
-            
-            long start = System.currentTimeMillis();
-            Arrays.sort(arr);
-            if (size < 101) printArray();
-            long finish = System.currentTimeMillis();
-            System.out.println("Arrays.sort: " + (finish-start) + " milliseconds.");
-            
-            // Heap sort      
-            start = finish;
-            heapsort();
-            if (size < 101) printArray();
-            finish = System.currentTimeMillis();
-            System.out.println("heapsort: " + (finish-start) + " milliseconds.");
- 
-            // Quick sort
-            start = finish;
-            for(int i=0; i<size; i++) arr[i] = arrCopy[i];
-            quicksort(0, size-1);
-            if (size < 101) printArray();
-            finish = System.currentTimeMillis();
-            System.out.println("quicksort: " + (finish-start) + " milliseconds.");
-            
-            // Merge sort, which destroys arrCopy[].
-            start = finish;
-            for(int i=0; i<size; i++) arr[i] = arrCopy[i];
-            mergesort(0, size-1);
-            if (size < 101) printArray();
-            finish = System.currentTimeMillis();
-            System.out.println("mergesort: " + (finish-start) + " milliseconds.");
-      
-        }
-        catch(Exception ex){
-            ex.printStackTrace();
-        }
-    }
-    
-    private static void insertSort(int low, int high) 
+public class sorting
+{
+    public static void main(String[] args)
     {
-    	
+        IntSorter[] sorters = { new Quicksort1(), new Quicksort2(), new Quicksort3(), new Quicksort4(),
+                new QuickSort(), new MergeSort(), new HeapSort(), new InsertionSort(), new JavaSort() };
+
+        Scanner scan = new Scanner(System.in);
+        System.out.print("Enter the number of runs: ");
+        int runs = scan.nextInt();
+        System.out.print("Enter the number of elements: ");
+        int arraySize = scan.nextInt();
+        
+        long[][] tenThouRangeTimes = new long[runs][sorters.length];
+        long[][] oneMilRangeTimes = new long[runs][sorters.length];
+        long[][] hundredMilRangeTimes = new long[runs][sorters.length];
+        
+
+        for (int run = 0; run < runs; run++)
+            tenThouRangeTimes[run] = getTimes(sorters, arraySize, 10000);
+        for (int run = 0; run < runs; run++)
+            oneMilRangeTimes[run] = getTimes(sorters, arraySize, 1000000);
+        for (int run = 0; run < runs; run++)
+            hundredMilRangeTimes[run] = getTimes(sorters, arraySize, 100000000);
+
+        printSummary(new long[][][] { tenThouRangeTimes, oneMilRangeTimes, hundredMilRangeTimes }, new String[] {
+                "10.000 Range", "1.000.000 Range", "100.000.000 Range" }, sorters);
+        
+        scan.close();
+    }
+
+    private static void printSummary(long[][][] times, String[] runTypes, IntSorter[] sorters)
+    {
+        System.out.println("Copy this data into a .csv file for best viewing experience");
+
+        // Print main header
+        System.out.print(",");
+        for (String string : runTypes)
+            System.out.print(string + ",,,");
+        System.out.println();
+
+        // Print secondary header
+        System.out.print(",");
+        for (int i = 0; i < runTypes.length; i++)
+            System.out.print("Average,Best,Worst,");
+        System.out.println();
+
+        // Print data
+        for (int i = 0; i < sorters.length; i++)
+        {
+            String name = sorters[i].getName();
+            System.out.print(name + ",");
+            for (int k = 0; k < runTypes.length; k++)
+                System.out.print(getAverage(times, k, i) + " , " + getBest(times, k, i) + ", " + getWorst(times, k, i)
+                        + ", ");
+            System.out.println();
+        }
+    }
+
+    private static long getAverage(long[][][] times, int runType, int sorter)
+    {
+        long[][] runs = times[runType]; // Get all the trials from this runtype
+        long sum = 0;
+        for (int i = 0; i < 10; i++)
+            // For all 10 trials
+            sum += runs[i][sorter];
+        return sum / 10;
+    }
+
+    private static long getWorst(long[][][] times, int runType, int sorter)
+    {
+        long[][] runs = times[runType]; // Get all the trials from this runtype
+        long low = Long.MIN_VALUE;
+        for (int i = 0; i < 10; i++)
+            // For all 10 trials
+            low = Math.max(low, runs[i][sorter]);
+        return low;
+    }
+
+    private static long getBest(long[][][] times, int runType, int sorter)
+    {
+        long[][] runs = times[runType]; // Get all the trials from this runtype
+        long low = Long.MAX_VALUE;
+        for (int i = 0; i < 10; i++)
+            // For all 10 trials
+            low = Math.min(low, runs[i][sorter]);
+        return low;
+    }
+
+    private static String spacer(int num)
+    {
+        return spacer(num, ' ');
+    }
+
+    private static String spacer(int num, char spacer)
+    {
+        num = Math.max(0, num);
+        StringBuilder builder = new StringBuilder(num);
+        for (int i = 0; i < num; i++)
+            builder.append(spacer);
+        return builder.toString();
+    }
+
+    private static long[] getTimes(IntSorter[] sorters, int arraySize, int randomRange)
+    {
+        long[] times = new long[sorters.length];
+        Random randomGenerator = new Random();
+
+        int[] baseArray = new int[arraySize];
+        for (int i = 0; i < arraySize; i++)
+            baseArray[i] = randomGenerator.nextInt(randomRange);
+
+        for (int i = 0; i < sorters.length; i++)
+        {
+            IntSorter sorter = sorters[i];
+            int[] array = new int[baseArray.length];
+            System.arraycopy(baseArray, 0, array, 0, array.length);
+
+            long start = System.currentTimeMillis();
+            sorter.sort(array);
+            times[i] = System.currentTimeMillis() - start;
+        }
+
+        return times;
     }
 }
