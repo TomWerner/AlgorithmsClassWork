@@ -10,7 +10,7 @@ public class Quicksort2 extends QuickSort
 
             if (!isSorted(array, low, p - 1))
             {
-                if (Math.abs((p - 1) - low) < 100)
+                if (Math.abs((p - 1) - low) < 50)
                     new InsertionSort().insertionSort(array, low, p - 1);
                 else
                     quickSort(array, low, p - 1);
@@ -18,7 +18,7 @@ public class Quicksort2 extends QuickSort
 
             if (!isSorted(array, p + 1, high))
             {
-                if (Math.abs(high - (p + 1)) < 100)
+                if (Math.abs(high - (p + 1)) < 50)
                     new InsertionSort().insertionSort(array, p + 1, high);
                 else
                     quickSort(array, p + 1, high);

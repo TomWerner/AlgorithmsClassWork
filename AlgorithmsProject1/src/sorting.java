@@ -90,20 +90,6 @@ public class sorting
         return low;
     }
 
-    private static String spacer(int num)
-    {
-        return spacer(num, ' ');
-    }
-
-    private static String spacer(int num, char spacer)
-    {
-        num = Math.max(0, num);
-        StringBuilder builder = new StringBuilder(num);
-        for (int i = 0; i < num; i++)
-            builder.append(spacer);
-        return builder.toString();
-    }
-
     private static long[] getTimes(IntSorter[] sorters, int arraySize, int randomRange)
     {
         long[] times = new long[sorters.length];
