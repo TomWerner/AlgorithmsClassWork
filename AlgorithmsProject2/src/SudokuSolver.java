@@ -11,14 +11,14 @@ public class SudokuSolver
     public final int success   = -100;
     public final int fail      = -1;
     public long      calls     = 0;
-    private int      successes = 1;
+    private int      solutions = 1;
 
     public SudokuSolver()
     {
-        successes = 1;
+        solutions = 1;
     }
 
-    public void displaySudoku()
+    public void displaySudoku(int[][] board)
     {
         for (int i = 0; i < 9; i++)
         {
@@ -94,7 +94,6 @@ public class SudokuSolver
         calls++;
         if (pos == success)
         {
-            displaySudoku();
             return success;
         }
 
@@ -102,7 +101,7 @@ public class SudokuSolver
         int col = pos & 15;
         int row = (pos >> 4) & 15;
 
-        int suc = 0;
+        int sols = 0;
 
         for (int k = 1; k <= 9; k++)
         {
@@ -113,15 +112,15 @@ public class SudokuSolver
                 if (backtrack(next(pos)) == success)
                 {
                     board[row][col] = orig;
-                    suc++;
+                    sols++;
                 }
             }
         }
         board[row][col] = empty;
         
-        if (suc > 0)
+        if (sols > 0)
         {
-            successes += (suc - 1);
+            solutions += (sols - 1);
             return success;
         }
         else
@@ -135,7 +134,7 @@ public class SudokuSolver
         // Solve the puzzle by backtrack search and display the solution if there is one.
         backtrack(next(-1));
         
-        return successes;
+        return solutions;
     }
 
     public static void main(String[] args)
@@ -158,8 +157,8 @@ public class SudokuSolver
                     board[i][j] = scanner.nextInt();
                 }
             }
-            System.out.println("Read in:");
-            new SudokuSolver().solveSudoku(board);
+            scanner.close();
+            new RedundancySolver().findRedundancies(board);
         }
         catch (Exception ex)
         {
