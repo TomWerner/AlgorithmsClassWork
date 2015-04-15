@@ -8,6 +8,7 @@ public class RedundancySolver
     
     public void findRedundancies(int[][] board)
     {
+        new SudokuSolver().displaySudoku(board);
         for (int row = 0; row < 9; row++)
         {
             for (int col = 0; col < 9; col++)
@@ -24,6 +25,5 @@ public class RedundancySolver
                 }
             }
         }
-        new SudokuSolver().displaySudoku(board);
     }
 }

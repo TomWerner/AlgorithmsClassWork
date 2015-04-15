@@ -1,0 +1,36 @@
+Please enter sudoku puzzle file name: sudoku1.txt
+ -------------------------------------
+ | 4 |   | 5 | 1 |   |   | 2 |   | 8 |
+ -------------------------------------
+ |   |   |   | 8 | 7 |   |   | 4 | 9 |
+ -------------------------------------
+ | 7 | 8 |   |   | 2 |   | 6 |   | 5 |
+ -------------------------------------
+ |   | 9 |   | 7 | 6 | 2 |   |   |   |
+ -------------------------------------
+ |   | 4 | 7 |   |   | 1 | 8 | 9 |   |
+ -------------------------------------
+ |   |   |   | 9 | 8 | 4 |   | 2 |   |
+ -------------------------------------
+ | 9 |   | 8 |   | 3 |   |   | 5 | 1 |
+ -------------------------------------
+ | 5 | 7 |   |   | 1 |   |   |   |   |
+ -------------------------------------
+ | 6 |   | 3 |   |   | 9 | 7 |   | 2 |
+ -------------------------------------
+4 at row 0 , col 0 is redundant.
+1 at row 0 , col 3 is redundant.
+2 at row 0 , col 6 is redundant.
+8 at row 0 , col 8 is redundant.
+8 at row 1 , col 3 is redundant.
+7 at row 1 , col 4 is redundant.
+8 at row 2 , col 1 is redundant.
+2 at row 2 , col 4 is redundant.
+5 at row 2 , col 8 is redundant.
+7 at row 3 , col 3 is redundant.
+4 at row 4 , col 1 is redundant.
+1 at row 4 , col 5 is redundant.
+8 at row 4 , col 6 is redundant.
+9 at row 5 , col 3 is redundant.
+9 at row 6 , col 0 is redundant.
+1 at row 6 , col 8 is redundant.

@@ -53,11 +53,6 @@ public class SudokuPanel extends JPanel
 
                 private void handleInput(DocumentEvent e)
                 {
-                    if (temp.getText().length() >= 1)
-                    {
-                        cells[(j + 1) % 81].setText(temp.getText().substring(1));
-                        temp.nextFocus();
-                    }
                 }
             });
             cells[i].setNextFocusableComponent(cells[(i + 1) % 81]);

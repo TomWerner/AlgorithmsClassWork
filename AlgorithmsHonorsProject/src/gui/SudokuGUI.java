@@ -1,7 +1,51 @@
 package gui;
 
+/*
+ * Copyright (c) 2010, Oracle.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  * Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *  * Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the distribution.
+ *  * Neither the name of Oracle nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED 
+ * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ */
+
+/* Anagram Game Application */
+
+import imageProcessing.SudokuRecognizer;
+
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+
+import org.opencv.core.Mat;
+import org.opencv.highgui.Highgui;
 
 import solver.SudokuSolver;
 
@@ -11,10 +55,6 @@ import solver.SudokuSolver;
 public class SudokuGUI extends JFrame
 {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
     public static void main(String[] args)
     {
         /* Set the Nimbus look and feel */
@@ -61,7 +101,9 @@ public class SudokuGUI extends JFrame
             }
         });
     }
-    
+
+    private File file;
+
     /** Creates new form Anagrams */
     public SudokuGUI()
     {
@@ -77,16 +119,18 @@ public class SudokuGUI extends JFrame
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents()
     {
-        leftSudoku = new SudokuPanel();
-        rightSudoku = new SudokuPanel();
+
+        sudokuInput = new SudokuPanel();
+        sudokuDisplay = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        detectCharacters = new javax.swing.JButton();
         solveButton = new javax.swing.JButton();
-        resetLeftButton = new javax.swing.JButton();
-        resetRightButton = new javax.swing.JButton();
+        resetButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        loadButton = new javax.swing.JButton();
 
-        setTitle("Sudoku Solver");
+        setTitle("Anagrams");
         addWindowListener(new java.awt.event.WindowAdapter()
         {
             public void windowClosing(java.awt.event.WindowEvent evt)
@@ -95,13 +139,22 @@ public class SudokuGUI extends JFrame
             }
         });
 
-        leftSudoku.setBorder(new javax.swing.border.SoftBevelBorder(0));
+        sudokuInput.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        rightSudoku.setBorder(new javax.swing.border.SoftBevelBorder(0));
+        sudokuDisplay.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("Sudoku Solver");
         jLabel1.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+
+        detectCharacters.setText("Detect Characters");
+        detectCharacters.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                detectCharactersActionPerformed(evt);
+            }
+        });
 
         solveButton.setText("Solve");
         solveButton.addActionListener(new java.awt.event.ActionListener()
@@ -112,47 +165,52 @@ public class SudokuGUI extends JFrame
             }
         });
 
-        resetLeftButton.setText("Reset Left");
-        resetLeftButton.addActionListener(new java.awt.event.ActionListener()
+        resetButton.setText("Reset");
+        resetButton.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                resetLeftButtonActionPerformed(evt);
-            }
-        });
-
-        resetRightButton.setText("Reset Right");
-        resetRightButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                resetRightButtonActionPerformed(evt);
+                resetButtonActionPerformed(evt);
             }
         });
 
         jLabel2.setText("Created by: Tom Werner");
 
+        loadButton.setText("Load Image");
+        loadButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                loadButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(
+                        javax.swing.GroupLayout.Alignment.TRAILING,
                         jPanel3Layout
                                 .createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(
                                         jPanel3Layout
-                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(resetLeftButton,
-                                                        javax.swing.GroupLayout.Alignment.TRAILING,
+                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                .addComponent(detectCharacters, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(loadButton, javax.swing.GroupLayout.Alignment.LEADING,
                                                         javax.swing.GroupLayout.DEFAULT_SIZE,
                                                         javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 154,
-                                                        Short.MAX_VALUE)
                                                 .addComponent(solveButton, javax.swing.GroupLayout.DEFAULT_SIZE,
                                                         javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(resetRightButton, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                                                .addComponent(resetButton,
+                                                        javax.swing.GroupLayout.Alignment.LEADING,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
                                                         javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addGroup(
+                                                        javax.swing.GroupLayout.Alignment.LEADING,
                                                         jPanel3Layout.createSequentialGroup().addComponent(jLabel2)
                                                                 .addGap(0, 0, Short.MAX_VALUE))).addContainerGap()));
         jPanel3Layout.setVerticalGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -162,12 +220,14 @@ public class SudokuGUI extends JFrame
                                 .addContainerGap()
                                 .addComponent(jLabel1)
                                 .addGap(18, 18, 18)
+                                .addComponent(loadButton)
+                                .addGap(13, 13, 13)
+                                .addComponent(detectCharacters)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(solveButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(resetLeftButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(resetRightButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 314,
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(resetButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 268,
                                         Short.MAX_VALUE).addComponent(jLabel2).addContainerGap()));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -175,10 +235,10 @@ public class SudokuGUI extends JFrame
         layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
                 layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(leftSudoku, javax.swing.GroupLayout.PREFERRED_SIZE, 478,
+                        .addComponent(sudokuInput, javax.swing.GroupLayout.PREFERRED_SIZE, 478,
                                 javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(rightSudoku, javax.swing.GroupLayout.PREFERRED_SIZE, 478,
+                        .addComponent(sudokuDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 478,
                                 javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE,
@@ -191,9 +251,9 @@ public class SudokuGUI extends JFrame
                                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(rightSudoku, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        .addComponent(sudokuDisplay, javax.swing.GroupLayout.DEFAULT_SIZE,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(leftSudoku, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        .addComponent(sudokuInput, javax.swing.GroupLayout.DEFAULT_SIZE,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap()));
     }// </editor-fold>
@@ -203,32 +263,89 @@ public class SudokuGUI extends JFrame
         System.exit(0);
     }
 
+    private void detectCharactersActionPerformed(java.awt.event.ActionEvent evt)
+    {
+        String puzzle = SudokuRecognizer.recognizeSudoku(file.getAbsolutePath());
+        
+        BufferedImage bi = new BufferedImage(sudokuDisplay.getWidth(), sudokuDisplay.getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = (Graphics2D) bi.createGraphics();
+        g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING,
+                RenderingHints.VALUE_RENDER_QUALITY));
+        g2d.drawImage(SudokuRecognizer.sudokuSquare, 0, 0, sudokuDisplay.getWidth(), sudokuDisplay.getHeight(), null);
+        
+        sudokuDisplay.setIcon(new ImageIcon((Image) bi));
+        
+        sudokuInput.setCells(puzzle.toCharArray());
+    }
+
     private void solveButtonActionPerformed(java.awt.event.ActionEvent evt)
     {
-        String puzzle = leftSudoku.getSudoku();
-        char[] result = new SudokuSolver().solveSudoku(puzzle, false);
-        rightSudoku.setCells(result);
+        char[] solution = new SudokuSolver().solveSudoku(sudokuInput.getSudoku(), true);
+        sudokuInput.setCells(solution);
     }
 
-    private void resetLeftButtonActionPerformed(java.awt.event.ActionEvent evt)
+    private void resetButtonActionPerformed(java.awt.event.ActionEvent evt)
     {
-        leftSudoku.resetCells();
+        // TODO add your handling code here:
     }
 
-    private void resetRightButtonActionPerformed(java.awt.event.ActionEvent evt)
+    private void loadButtonActionPerformed(java.awt.event.ActionEvent evt)
     {
-        rightSudoku.resetCells();
+        int returnVal = fc.showOpenDialog(SudokuGUI.this);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION)
+        {
+            file = fc.getSelectedFile();
+            // This is where a real application would open the file.
+            System.out.println("Opening: " + file.getName() + ".");
+            BufferedImage image = new ImgUtils().scaleImage(sudokuDisplay.getWidth(), sudokuDisplay.getHeight(),
+                    file.getAbsolutePath());
+            sudokuDisplay.setIcon(new ImageIcon((Image) image));
+        }
+        else
+        {
+            System.out.println("Open command cancelled by user.");
+        }
     }
+
+    // Create a file chooser
+    final JFileChooser          fc = new JFileChooser();
 
     // Variables declaration - do not modify
+    private javax.swing.JButton loadButton;
     private javax.swing.JLabel  jLabel1;
     private javax.swing.JLabel  jLabel2;
-    private SudokuPanel  leftSudoku;
-    private SudokuPanel  rightSudoku;
+    private SudokuPanel  sudokuInput;
+    private javax.swing.JLabel  sudokuDisplay;
     private javax.swing.JPanel  jPanel3;
-    private javax.swing.JButton resetLeftButton;
-    private javax.swing.JButton resetRightButton;
     private javax.swing.JButton solveButton;
+    private javax.swing.JButton resetButton;
+    private javax.swing.JButton detectCharacters;
+
     // End of variables declaration
+
+    class ImgUtils
+    {
+
+        public BufferedImage scaleImage(int WIDTH, int HEIGHT, String filename)
+        {
+            BufferedImage bi = null;
+            try
+            {
+                ImageIcon ii = new ImageIcon(filename);// path to image
+                bi = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+                Graphics2D g2d = (Graphics2D) bi.createGraphics();
+                g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING,
+                        RenderingHints.VALUE_RENDER_QUALITY));
+                g2d.drawImage(ii.getImage(), 0, 0, WIDTH, HEIGHT, null);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                return null;
+            }
+            return bi;
+        }
+    }
 
 }
